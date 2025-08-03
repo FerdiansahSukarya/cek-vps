@@ -1,0 +1,17 @@
+mysql_conn = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="root",  # atau 'root' kalau itu password kamu
+    database="sensor_db"
+)
+mysql_cursor = mysql_conn.cursor(dictionary=True)
+
+# === KONEKSI SUPABASE (PostgreSQL) ===
+supabase_conn = psycopg2.connect(
+    host="aws-0-ap-southeast-1.pooler.supabase.com",
+    database="postgres",
+    user="postgres.siosiigonlauesjlafbq",
+    password="ferdiansah04",
+    port=6543
+)
+supabase_cursor = supabase_conn.cursor()
