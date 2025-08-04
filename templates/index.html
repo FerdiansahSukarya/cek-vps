@@ -1,23 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Monitoring Tinggi Tanaman</title>
+    <title>Monitoring Sensor</title>
 </head>
 <body>
-  <h1>Tinggi Tanaman</h1>
-  <p><strong>{{ tinggi }} cm</strong></p>
-  <p>Nilai pH: {{ ph }}</p>
-
-  <h2>Kontrol Relay</h2>
-  <div>
-    <p>Relay 1:
-      <a href="/relay/1/on">ON</a> |
-      <a href="/relay/1/off">OFF</a>
-    </p>
-    <p>Relay 2:
-      <a href="/relay/2/on">ON</a> |
-      <a href="/relay/2/off">OFF</a>
-    </p>
-  </div>
+    <h2>Data Sensor Terbaru</h2>
+    {% if row %}
+        <p><strong>Waktu:</strong> {{ row[0] }}</p>
+        <p><strong>pH:</strong> {{ row[1] }}</p>
+        <p><strong>Tinggi Tanaman:</strong> {{ row[2] }} cm</p>
+    {% else %}
+        <p>Belum ada data</p>
+    {% endif %}
 </body>
 </html>

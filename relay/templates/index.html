@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Kontrol Relay</title>
+</head>
+<body>
+    <h2>Status pH: {{ ph }}</h2>
+    <p>Jenis relay: {{ jenis.upper() }}</p>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul>
+          {% for msg in messages %}
+            <li>{{ msg }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    {% if allow %}
+        <form method="post">
+            <button type="submit">Aktifkan Relay {{ jenis.upper() }}</button>
+        </form>
+    {% else %}
+        <p>Relay sudah aktif dalam seminggu terakhir.</p>
+    {% endif %}
+</body>
+</html>
