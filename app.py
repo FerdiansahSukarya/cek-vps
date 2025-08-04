@@ -1,9 +1,14 @@
-from flask import Flask, render_template, redirect, url_for, request
-import pymysql
+from flask import Flask, render_template, session, redirect, url_for, request
+import pymysql, threading
 from datetime import datetime
 from sensor_reader import data_ph, data_tinggi, lock, simpan_ke_mysql, start_background_threads
+#from relay_runner import run_relay_loop  # fungsi utama relay, nanti kita atur
+from relay_runner import run_relay_loop, stop_relay_loop
 
 app = Flask(__name__)
+app.secret_key = 'ferdi123'  # ? Tambahkan baris ini
+relay_running = False
+relay_thread = None
 
 # Jalankan sensor & penyimpanan di latar belakang
 start_background_threads()
@@ -25,9 +30,38 @@ def index():
             with conn.cursor() as cursor:
                 cursor.execute("SELECT waktu, ph, tinggi_cm FROM sensor_data ORDER BY waktu DESC LIMIT 1")
                 row = cursor.fetchone()
-        return render_template("index.html", row=row)
+
+            # Ambil log relay terbaru jika ada
+            latest_log = None
+            if relay_running:
+                with conn.cursor() as cursor:
+                    cursor.execute("""
+                        SELECT waktu, durasi, jenis 
+                        FROM relay_log 
+                        WHERE status='on' 
+                        ORDER BY waktu DESC LIMIT 1
+                    """)
+                    latest_log = cursor.fetchone()
+
+        return render_template("index.html", row=row, relay_running=relay_running, latest_log=latest_log)
     except Exception as e:
         return f"Error: {e}"
+
+
+@app.route("/toggle", methods=["POST"])
+def toggle():
+    global relay_running, relay_thread
+
+    if session.get("relay_running"):
+        relay_running = False
+        session["relay_running"] = False
+    else:
+        relay_running = True
+        session["relay_running"] = True
+        relay_thread = threading.Thread(target=run_relay_loop, daemon=True)
+        relay_thread.start()
+
+    return redirect("/")
 
 @app.route("/riwayat")
 def riwayat():

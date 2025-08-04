@@ -101,6 +101,60 @@
                     <p class="no-data">Belum ada data</p>
                 {% endif %}
             </div>
+            <form method="post" action="/toggle">
+            <button type="submit">{{ 'Stop' if relay_running else 'Start' }}</button>
+            </form>
+            <p>Note: {% if relay_running %}Program sedang berjalan.{% else %}Program berhenti.{% endif %}</p>
+{% if relay_running and latest_log %}
+    <h3>Status Relay Aktif</h3>
+    <table border="1" cellpadding="8" cellspacing="0">
+        <tr>
+            <th>Jenis</th>
+            <th>Countdown (1 Minggu)</th>
+            <th>Countdown (20 Detik)</th>
+        </tr>
+        <tr>
+            <td>{{ latest_log[2] }}</td>
+            <td id="minggu_countdown">Menghitung...</td>
+            <td id="detik_countdown">20</td>
+        </tr>
+    </table>
+
+    <script>
+        // Set waktu mulai dari server
+        const waktuMulai = new Date("{{ latest_log[0] }}");
+        const now = new Date();
+        
+        // Countdown 1 minggu (dalam hari dan jam)
+        function updateMingguCountdown() {
+            const target = new Date(waktuMulai.getTime() + 7 * 24 * 60 * 60 * 1000);
+            const selisih = target - new Date();
+
+            if (selisih > 0) {
+                const hari = Math.floor(selisih / (1000 * 60 * 60 * 24));
+                const jam = Math.floor((selisih / (1000 * 60 * 60)) % 24);
+                document.getElementById("minggu_countdown").innerText = `${hari} hari ${jam} jam lagi`;
+            } else {
+                document.getElementById("minggu_countdown").innerText = "Selesai";
+            }
+        }
+
+        // Countdown 20 detik
+        let detikTersisa = 20;
+        function updateDetikCountdown() {
+            if (detikTersisa > 0) {
+                document.getElementById("detik_countdown").innerText = detikTersisa;
+                detikTersisa--;
+            } else {
+                document.getElementById("detik_countdown").innerText = "20";
+            }
+        }
+
+        setInterval(updateMingguCountdown, 60 * 1000); // per menit
+        setInterval(updateDetikCountdown, 1000); // per detik
+    </script>
+{% endif %}
+
         </div>
     </div>
 </body>
