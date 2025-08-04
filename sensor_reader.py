@@ -57,7 +57,7 @@ def baca_ph():
                 data_ph = ph_value
         except OSError as e:
             print("I2C Error:", str(e))
-        time.sleep(5)
+        time.sleep(30)
 
 def simpan_ke_mysql(ph, tinggi):
     try:
@@ -118,7 +118,14 @@ def loop_simpan_dan_sync():
         time.sleep(30)  # setiap 10 detik
 
 # Jalankan semua
-if __name__ == "__main__":
+def start_background_threads():
     threading.Thread(target=baca_serial, daemon=True).start()
     threading.Thread(target=baca_ph, daemon=True).start()
-    loop_simpan_dan_sync()
+    threading.Thread(target=loop_simpan_dan_sync, daemon=True).start()
+
+if __name__ == "__main__":
+    start_background_threads()
+    while True:
+        time.sleep(1)  # agar thread tidak langsung selesai
+
+

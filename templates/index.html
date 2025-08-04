@@ -2,15 +2,106 @@
 <html>
 <head>
     <title>Monitoring Sensor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f3f4f6;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 200px;
+            background-color: #047857;
+            padding-top: 20px;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+        }
+
+        .sidebar a {
+            display: block;
+            color: white;
+            padding: 12px 20px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .sidebar a:hover {
+            background-color: #065f46;
+        }
+
+        .content {
+            margin-left: 200px;
+            padding: 20px;
+            width: 100%;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+
+        .judul {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .judul h2 {
+            color: #1f2937;
+            margin: 0;
+        }
+
+        .data {
+            text-align: left;
+        }
+
+        .data p {
+            font-size: 16px;
+            margin: 10px 0;
+            color: #374151;
+        }
+
+        .label {
+            font-weight: bold;
+            color: #111827;
+        }
+
+        .no-data {
+            text-align: center;
+            font-style: italic;
+            color: #9ca3af;
+        }
+    </style>
+
 </head>
 <body>
-    <h2>Data Sensor Terbaru</h2>
-    {% if row %}
-        <p><strong>Waktu:</strong> {{ row[0] }}</p>
-        <p><strong>pH:</strong> {{ row[1] }}</p>
-        <p><strong>Tinggi Tanaman:</strong> {{ row[2] }} cm</p>
-    {% else %}
-        <p>Belum ada data</p>
-    {% endif %}
+    <div class="sidebar">
+        <a href="/">Home</a>
+        <a href="/riwayat">Riwayat</a>
+    </div>
+
+    <div class="content">
+        <div class="container">
+            <div class="judul">
+                <h2>Data Sensor Terbaru</h2>
+            </div>
+            <div class="data">
+                {% if row %}
+                    <p><span class="label">Waktu:</span> {{ row[0] }}</p>
+                    <p><span class="label">pH:</span> {{ row[1] }}</p>
+                    <p><span class="label">Tinggi Tanaman:</span> {{ row[2] }} cm</p>
+                {% else %}
+                    <p class="no-data">Belum ada data</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
 </body>
 </html>

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Riwayat Sensor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f3f4f6;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 200px;
+            background-color: #047857;
+            padding-top: 20px;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+        }
+
+        .sidebar a {
+            display: block;
+            color: white;
+            padding: 12px 20px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .sidebar a:hover {
+            background-color: #065f46;
+        }
+
+        .content {
+            margin-left: 200px;
+            padding: 20px;
+            width: 100%;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #1f2937;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #e5e7eb;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #047857;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9fafb;
+        }
+
+        .pagination {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .pagination a {
+            display: inline-block;
+            padding: 8px 16px;
+            margin: 0 5px;
+            background-color: #047857;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .pagination a:hover {
+            background-color: #065f46;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <a href="/">Home</a>
+        <a href="/riwayat">Riwayat</a>
+    </div>
+
+    <div class="content">
+        <div class="container">
+            <h2>Riwayat Data Sensor</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Waktu</th>
+                        <th>pH</th>
+                        <th>Tinggi Tanaman (cm)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in data %}
+                    <tr>
+        <td>{{ loop.index0 + start_index + 1 }}</td>
+        <td>{{ row['waktu'] }}</td>
+        <td>{{ row['ph'] }}</td>
+        <td>{{ row['tinggi_cm'] }}</td>
+    </tr>
+    {% endfor %}
+</tbody>
+
+            </table>
+
+            <div class="pagination">
+                {% if page > 1 %}
+                    <a href="{{ url_for('riwayat', page=page-1) }}">� Prev</a>
+                {% endif %}
+                {% if has_more %}
+                    <a href="{{ url_for('riwayat', page=page+1) }}">Next �</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>
